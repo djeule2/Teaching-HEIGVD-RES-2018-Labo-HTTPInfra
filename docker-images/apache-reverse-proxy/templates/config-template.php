@@ -6,6 +6,8 @@
 ?>
 
 <VirtualHost *:80>
+  Header add Set-Cookie "ROUTEID=.%{BALANCER_WORKER_ROUTE}e; path=/" env=BALANCER_ROUTE_CHANGED
+  
   ServerName demo.res.ch
   
   # répartition de charge pour les serveurs dynamiques
@@ -13,11 +15,13 @@
     BalancerMember 'http://<?php print "$dynamic_app1"?>'
     BalancerMember 'http://<?php print "$dynamic_app2"?>'
   </Proxy>
-  
+ 
+
   # répartition de charge pour les serveurs statiques
   <Proxy "balancer://static_app">
-    BalancerMember 'http://<?php print "$static_app1"?>/'
-    BalancerMember 'http://<?php print "$static_app2"?>/'
+    BalancerMember 'http://<?php print "$static_app1"?>/' route=1
+    BalancerMember 'http://<?php print "$static_app2"?>/' route=2
+	ProxySet stickysession=ROUTEID
   </Proxy>
 
   ProxyPass '/api/students/' 'balancer://dynamic_app/'
