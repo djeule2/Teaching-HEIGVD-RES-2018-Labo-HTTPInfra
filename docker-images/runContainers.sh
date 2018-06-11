@@ -28,3 +28,7 @@ dynamic_app2=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' express
 
 # run the apache_rp (reverse proxy) container 
 docker run -d -p 8080:80 -e STATIC_APP1=$static_app1:80 -e STATIC_APP2=$static_app2:80 -e DYNAMIC_APP1=$dynamic_app1:3000 -e DYNAMIC_APP2=$dynamic_app2:3000 --name apache_rp res/apache_rp
+
+# deploy Portainer on port 9000
+docker volume create portainer_data
+docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
