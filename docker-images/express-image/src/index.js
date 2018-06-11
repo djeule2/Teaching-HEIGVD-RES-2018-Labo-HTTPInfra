@@ -1,6 +1,8 @@
 var Chance = require('chance');
 var chance = new Chance();
 
+var compteur = 0;
+
 const express = require('express')
 const app = express()
 
@@ -25,6 +27,7 @@ function generateAnimals() {
 			max: 1996
 		});
 		animals.push({
+			cmp: compteur++,
 			name: chance.first(),
 			animalType: chance.animal(),
 			birthday: chance.birthday({
